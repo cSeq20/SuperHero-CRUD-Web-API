@@ -1,6 +1,6 @@
-﻿namespace SuperHeroAPI.Models
+﻿namespace SuperHeroAPI.DTO
 {
-    public record SuperHero
+    public record SuperheroDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
