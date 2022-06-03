@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using SuperHeroAPI.DTO;
 using SuperHeroAPI.Models;
 using SuperHeroAPI.Repository;
@@ -20,23 +18,24 @@ namespace SuperHeroAPI.Controllers
 
         // GET /superhero
         [HttpGet]
-        public async Task<ActionResult<List<SuperheroDto>>> GetSuperHeros()
+        public async Task<ActionResult<List<SuperheroDto>>> GetSuperHerosAsync()
         {
-            var superHeroes = _repository.GetSuperHeroes().Select(hero => hero.AsDto());
+            var superHeroes = (await _repository.GetSuperHeroesAsync())
+                              .Select(hero => hero.AsDto());
             return Ok(superHeroes);
         }
 
         // GET /superhero/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<SuperheroDto>> GetSuperHero(Guid id)
+        public async Task<ActionResult<SuperheroDto>> GetSuperHeroAsync(Guid id)
         {
-            var superHero = _repository.GetSuperHero(id);
+            var superHero = await _repository.GetSuperHeroAsync(id);
             return superHero == null ? NotFound("Superhero not found") : Ok(superHero.AsDto());
         }
 
         // POST /superhero
         [HttpPost]
-        public async Task<ActionResult<CreateSuperHeroDto>> AddHero(CreateSuperHeroDto heroDto)
+        public async Task<ActionResult<CreateSuperHeroDto>> AddHeroAsync(CreateSuperHeroDto heroDto)
         {
             SuperHero hero = new()
             {
@@ -47,15 +46,15 @@ namespace SuperHeroAPI.Controllers
                 Place = heroDto.Place,
             };
 
-            _repository.AddSuperHero(hero);
-            return CreatedAtAction(nameof (GetSuperHero), new { id = hero.Id}, hero.AsDto());
+            await _repository.AddSuperHeroAsync(hero);
+            return CreatedAtAction(nameof (GetSuperHeroAsync), new { id = hero.Id}, hero.AsDto());
         }
 
         // PUT /superhero/id
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateHero(Guid id, UpdateSuperHeroDto superheroDto)
+        public async Task<ActionResult> UpdateHeroAsync(Guid id, UpdateSuperHeroDto superheroDto)
         {
-            var existingHero = _repository.GetSuperHero(id);
+            var existingHero = await _repository.GetSuperHeroAsync(id);
             if (existingHero is null)
                 return NotFound();
 
@@ -67,19 +66,19 @@ namespace SuperHeroAPI.Controllers
                 Place = superheroDto.Place
             };
 
-            _repository.UpdateSuperHero(updatedHero);
+            await _repository.UpdateSuperHeroAsync(updatedHero);
             return NoContent();
         }
         
         // DELETE /superhero/id
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            var existingHero = _repository.GetSuperHero(id);
+            var existingHero = await _repository.GetSuperHeroAsync(id);
             if (existingHero is null)
                 return NotFound();
 
-            _repository.DeleteSuperHero(id);
+            await _repository.DeleteSuperHeroAsync(id);
             return NoContent();
 
        }

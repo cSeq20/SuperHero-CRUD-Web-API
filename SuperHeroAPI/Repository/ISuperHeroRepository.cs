@@ -4,10 +4,10 @@ namespace SuperHeroAPI.Repository
 {
     public interface ISuperHeroRepository
     {
-        public IEnumerable<SuperHero> GetSuperHeroes();
-        public SuperHero GetSuperHero(Guid id);
-        public void AddSuperHero(SuperHero hero);
-        public void UpdateSuperHero(SuperHero hero);
-        public void DeleteSuperHero(Guid id);
+        public Task<IEnumerable<SuperHero>> GetSuperHeroesAsync();
+        public Task<SuperHero> GetSuperHeroAsync(Guid id);
+        public Task AddSuperHeroAsync(SuperHero hero);
+        public Task UpdateSuperHeroAsync(SuperHero hero);
+        public Task DeleteSuperHeroAsync(Guid id);
     }
 }

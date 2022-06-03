@@ -6,36 +6,40 @@ namespace SuperHeroAPI.Repository
     {
         private readonly List<SuperHero> _superHeroes = new()
         {
-            new SuperHero {Id = new Guid(), FirstName = "Bruce", LastName = "Banner", Name = "Hulk", Place = string.Empty },
-            new SuperHero {Id = new Guid(), FirstName = "Peter", LastName = "Parker", Name = "Spiderman", Place = "New York" },
-            new SuperHero {Id = new Guid(), FirstName = "Tony", LastName = "Stark", Name = "Ironman", Place = "Long Island" }
+            new SuperHero {Id = Guid.NewGuid(), FirstName = "Bruce", LastName = "Banner", Name = "Hulk", Place = string.Empty },
+            new SuperHero {Id = Guid.NewGuid(), FirstName = "Peter", LastName = "Parker", Name = "Spiderman", Place = "New York" },
+            new SuperHero {Id = Guid.NewGuid(), FirstName = "Tony", LastName = "Stark", Name = "Ironman", Place = "Long Island" }
         };
 
-        public IEnumerable<SuperHero> GetSuperHeroes()
+        public async Task<IEnumerable<SuperHero>> GetSuperHeroesAsync()
         {
-            return _superHeroes;
+            return await Task.FromResult(_superHeroes);
         }
 
-        public SuperHero GetSuperHero(Guid id)
+        public async Task<SuperHero> GetSuperHeroAsync(Guid id)
         {
-            return _superHeroes.SingleOrDefault(hero => hero.Id == id);
+            var hero = _superHeroes.SingleOrDefault(hero => hero.Id == id);
+            return await Task.FromResult(hero);
         }
 
-        public void AddSuperHero(SuperHero hero)
+        public async Task AddSuperHeroAsync(SuperHero hero)
         {
             _superHeroes.Add(hero);
+            await Task.CompletedTask;
         }
 
-        public void UpdateSuperHero(SuperHero hero)
+        public async Task UpdateSuperHeroAsync(SuperHero hero)
         {
             var index = _superHeroes.FindIndex(existing => existing.Id == hero.Id);
             _superHeroes[index] = hero;
+            await Task.CompletedTask;
         }
 
-        public void DeleteSuperHero(Guid id)
+        public async Task DeleteSuperHeroAsync(Guid id)
         {
             var index = _superHeroes.FindIndex(existing => existing.Id == id);
             _superHeroes.RemoveAt(index);
+            await Task.CompletedTask;
         }
     }
 }

@@ -17,32 +17,32 @@ namespace SuperHeroAPI.Repository
             _superHeroCollection = database.GetCollection<SuperHero>(collectionName);
         }
 
-        public void AddSuperHero(SuperHero hero)
+        public async Task AddSuperHeroAsync(SuperHero hero)
         {
-            _superHeroCollection.InsertOne(hero);
+            await _superHeroCollection.InsertOneAsync(hero);
         }
 
-        public void DeleteSuperHero(Guid id)
-        {
-            var filter = filterBuilder.Eq(hero => hero.Id, id);
-            _superHeroCollection.DeleteOne(filter);
-        }
-
-        public SuperHero GetSuperHero(Guid id)
+        public async Task DeleteSuperHeroAsync(Guid id)
         {
             var filter = filterBuilder.Eq(hero => hero.Id, id);
-            return _superHeroCollection.Find(filter).SingleOrDefault();
+            await _superHeroCollection.DeleteOneAsync(filter);
         }
 
-        public IEnumerable<SuperHero> GetSuperHeroes()
+        public async Task<SuperHero> GetSuperHeroAsync(Guid id)
         {
-            return _superHeroCollection.Find(new BsonDocument()).ToList();
+            var filter = filterBuilder.Eq(hero => hero.Id, id);
+            return await _superHeroCollection.Find(filter).SingleOrDefaultAsync();
         }
 
-        public void UpdateSuperHero(SuperHero hero)
+        public async Task<IEnumerable<SuperHero>> GetSuperHeroesAsync()
+        {
+            return await _superHeroCollection.Find(new BsonDocument()).ToListAsync();
+        }
+
+        public async Task UpdateSuperHeroAsync(SuperHero hero)
         {
             var filter = filterBuilder.Eq(existingHero => existingHero.Id, hero.Id);
-            _superHeroCollection.ReplaceOne(filter, hero);
+            await _superHeroCollection.ReplaceOneAsync(filter, hero);
         }
     }
 }

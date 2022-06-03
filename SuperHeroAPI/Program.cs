@@ -9,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+});
 
 // for connecting/using sql server instance
 //builder.Services.AddDbContext<DataContext>(options =>
